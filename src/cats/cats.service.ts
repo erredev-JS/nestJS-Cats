@@ -32,10 +32,10 @@ export class CatsService {
   }
 
   async update(id: number, updateCatDto: UpdateCatDto) {
-    return `This action updates a #${id} cat`;
+    return await this.catRepository.update({id}, updateCatDto)
   }
 
   async remove(id: number) {
-    return `This action removes a #${id} cat`;
+    return await this.catRepository.softDelete({id});
   }
 }
