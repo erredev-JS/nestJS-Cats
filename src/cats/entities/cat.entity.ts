@@ -1,4 +1,5 @@
-import {Entity, Column, DeleteDateColumn} from 'typeorm'
+import { Breed } from 'src/breeds/entities/breed.entity';
+import {Entity, Column, DeleteDateColumn, ManyToOne} from 'typeorm'
 
 @Entity()
 export class Cat {
@@ -17,5 +18,8 @@ export class Cat {
 
     @DeleteDateColumn()
     deletedAt: Date
+
+    @ManyToOne(() => Breed, (breed) => breed.id)
+    breed_id: number
     
 }
