@@ -1,4 +1,5 @@
 import { IsNumber, IsOptional, IsPositive, IsString, MinLength } from "class-validator";
+import { Breed } from "src/breeds/entities/breed.entity";
 
 export class CreateCatDto {
 
@@ -13,8 +14,8 @@ export class CreateCatDto {
     @IsPositive()
     age: number;
 
-    @IsString()
+    @IsNumber()
     @IsOptional()
-    breed?: string
+    breedId: number
 
 }

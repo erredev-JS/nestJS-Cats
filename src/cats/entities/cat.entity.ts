@@ -12,14 +12,12 @@ export class Cat {
 
     @Column()
     age: number
-
-    @Column()
-    breed: string
-
+    
+    @ManyToOne(() => Breed, (breed) => breed.id, {eager: true})
+    breed: Breed
+    
+    
     @DeleteDateColumn()
     deletedAt: Date
-
-    @ManyToOne(() => Breed, (breed) => breed.id)
-    breed_id: number
     
 }

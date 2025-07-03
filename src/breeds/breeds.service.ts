@@ -6,12 +6,14 @@ import { Breed } from './entities/breed.entity';
 import {Repository} from 'typeorm'
 @Injectable()
 export class BreedsService {
+
   constructor (
     @InjectRepository(Breed)
     private readonly breedRepository: Repository<Breed>
   ) {}
+
   async create(createBreedDto: CreateBreedDto) {
-    const breed = await this.breedRepository.create(createBreedDto)
+    const breed = this.breedRepository.create(createBreedDto)
     return await this.breedRepository.save(breed)
   }
 
@@ -20,7 +22,11 @@ export class BreedsService {
   }
 
   async findOne(id: number) {
-    return await this.breedRepository.findOneBy({id})
+   const breed = await this.breedRepository.findOneBy({id})
+   if(!breed){
+    return `No hay breed con id ${id}`
+   }
+   return breed
   }
 
   async update(id: number, updateBreedDto: UpdateBreedDto) {

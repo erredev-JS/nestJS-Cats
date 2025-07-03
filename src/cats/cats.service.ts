@@ -1,21 +1,35 @@
-import { Body, Get, Injectable, Param, Post } from '@nestjs/common';
+import { BadRequestException, Body, Get, Injectable, Param, Post } from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cat } from './entities/cat.entity';
 import {Repository} from 'typeorm'
+import { Breed } from 'src/breeds/entities/breed.entity';
 @Injectable()
 export class CatsService {
 
   constructor(
     @InjectRepository(Cat)
-    private readonly catRepository: Repository<Cat>
+    private readonly catRepository: Repository<Cat>,
+    @InjectRepository(Breed)
+    private readonly breedRepository: Repository<Breed>
   ){}
-
+ 
   @Post()
-  async create(@Body() createCatDto: CreateCatDto) {
-    const newCat = this.catRepository.create(createCatDto)
-    return await this.catRepository.save(newCat);
+  async create(createCatDto: CreateCatDto) {
+
+    const breed = await this.breedRepository.findOneBy({id: createCatDto.breedId})
+   
+     if(!breed){
+       throw new BadRequestException('a')
+     }else{
+       const cat = await this.catRepository.create({
+         name: createCatDto.name,
+         age: createCatDto.age,
+         breed,
+       });
+       return await this.catRepository.save(cat);
+     }
   }
   @Get() 
   async findAll() {
