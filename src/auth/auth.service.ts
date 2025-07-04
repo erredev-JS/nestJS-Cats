@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { RegisterDto } from './dto/register.dto';
-
+import * as bcryptjs from 'bcryptjs'
 @Injectable()
 export class AuthService {
 
@@ -9,13 +9,18 @@ export class AuthService {
         private readonly usersService: UsersService
     ){}
 
+    
 
-    async register(registerDto: RegisterDto){
-        const user = await this.usersService.findOneByEmail(registerDto.email)
+    async register({name, email, password}: RegisterDto){
+        const user = await this.usersService.findOneByEmail(email)
         if(user){
-            return 'El usuario ya existe'
+            throw new BadRequestException('El usuario ya existe')
         }
-        return this.usersService.create(registerDto)
+        return this.usersService.create({
+            name, 
+            email, 
+            password: await bcryptjs.hash(password, 10)
+        })
         
     }
     
