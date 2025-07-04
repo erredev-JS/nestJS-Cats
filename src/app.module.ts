@@ -5,6 +5,7 @@ import { CatsModule } from './cats/cats.module';
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BreedsModule } from './breeds/breeds.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { BreedsModule } from './breeds/breeds.module';
       synchronize: true,
     }),
     CatsModule,
-    BreedsModule],
+    BreedsModule,
+    UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

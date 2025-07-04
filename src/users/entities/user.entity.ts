@@ -1,0 +1,3 @@
+
+@Entity()
+export class User {}
