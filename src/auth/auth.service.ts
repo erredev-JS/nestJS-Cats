@@ -20,11 +20,15 @@ export class AuthService {
     if (user) {
       throw new BadRequestException('El usuario ya existe');
     }
-    return this.usersService.create({
+    await this.usersService.create({
       name,
       email,
       password: await bcryptjs.hash(password, 10),
     });
+    return {
+      name,
+      email,
+    };
   }
 
   async login({ email, password }: LoginDto) {
@@ -36,9 +40,20 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Contraseña incorrecta');
     }
-    const payload = {email: user.email}
+    const payload = { email: user.email, role: user.role };
     return {
-        access_token: await this.jwtService.signAsync(payload)
+      access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async profile({ email, role }: { email: string; role: string }) {
+    // Una tecnica un poco arcaica, usaremos un middleware para remplazar esto
+    // if (role !== 'admin') {
+    //   throw new UnauthorizedException(
+    //     'You are not authorized to access this resource',
+    //   );
+    // }
+
+    return await this.usersService.findOneByEmail(email);
   }
 }
