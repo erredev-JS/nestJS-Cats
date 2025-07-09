@@ -30,6 +30,10 @@ export class UsersService {
     return await this.userRepository.findOneBy({email: email}) 
   }
 
+  async findByEmailWithPassword(email: string){
+    return await this.userRepository.findOne({where: {email}, select: ['id', 'name', 'email', 'password', 'role']})
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.findOneBy({id: id})
     if(!user){
